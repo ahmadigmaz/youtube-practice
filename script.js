@@ -1,38 +1,19 @@
-const fs = require("fs");
-const http = require("http");
+const express = require('express')// ap hamare paas express constant main sxpress ki sari powers hai we can do lot of things now
+const app = express()// hamne express() function call kiya hai and hamne express ki sari powers app constant ko dedi hai ab ham is app constant se kuch bhi kar sakte hai , is aap constant se ham bahut sari app craete kar sakte hai kuch bhi kar sakte hai
+const {firstMiddleware} = require("./middleWares/firstMiddleware");
+const {secondMiddleware} = require("./middleWares/secondMiddleware");
+//to sabse pehla kaam route create karte hai , this is one of the dabse pehla kaam it can do baby
 
-fs.writeFile("hey.txt", "kya haal hai bhai sab theek thak hai na?", (err)=>{
-    if(err){
-        console.error(err);
-    }else{
-        console.log("done");
-    }
-});
-
-fs.appendFile("hey.txt","mai to theek hun bhai , aap batao?",(err)=>{
-    if(err){
-        console.error(err)
-    }else{
-        console.log("append done");
-    }
-    
-
+app.get('/',firstMiddleware, secondMiddleware,(req, res) => {
+  res.send('Hello World!');
+  console.log("hui hui maja agya bhai");
 })
 
-/fs.readFile("hey.txt", (err)=>{
-    if(err) console.log(err.message);
-    else console.log("done");
+app.use((err, req, res, next)=>{
+    console.error(err.stack);
+    res.status(500).send('something broke!');
 })
 
-
-const server = http.createServer((req, res)=>{
-    res.end("hello");
+app.listen(3000, () => {
+  console.log('App listening on port 3000')
 })
-
-server.listen(3000, (err)=>{
-    if(!err){
-    console.log("server is listening on port 3000")
-    }else{
-        console.log(err.message);
-    }
-});
